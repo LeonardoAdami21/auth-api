@@ -35,7 +35,10 @@ model Playlist {
 
 model Song {
   id        String   @id @default(uuid())
-  name      String
+  name      String   
+  duration  String
+  videoUrl  String
+  imageUrl  String
   playlistId String
   playlist  Playlist @relation(fields: [playlistId], references: [id])
   createdAt DateTime? @default(now())
@@ -44,10 +47,20 @@ model Song {
   artistId  String
 }
 
+model Albuns{
+  id        String   @id @default(uuid())
+  name      String
+  artistId  String
+  artist    Artist  @relation(fields: [artistId], references: [id])
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
 model Artist {
   id        String   @id @default(uuid())
   name      String
   songs     Song[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+  albuns    Albuns[]
 }
