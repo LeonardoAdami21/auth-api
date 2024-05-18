@@ -11,6 +11,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { environmentVariables } from 'src/env/envoriment';
 
 @Injectable()
 export class AuthService {
@@ -53,7 +54,10 @@ export class AuthService {
         throw new ConflictException('Invalid password');
       }
       const payload = { sub: user.id };
-      const token = this.jwtService.sign(payload);
+      const token = this.jwtService.sign(payload, {
+        secret: environmentVariables.jwtSecret,
+        expiresIn: '1d',
+      });
       return { access_token: token };
     } catch (error) {
       throw new Error(error.message);
