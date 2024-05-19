@@ -3,8 +3,22 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { SongsModule } from './songs/songs.module';
 import { PlaylistModule } from './playlist/playlist.module';
+import { ArtistModule } from './artist/artist.module';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [ConfigModule.forRoot(), AuthModule, SongsModule, PlaylistModule],
+  imports: [
+    ConfigModule.forRoot(),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    AuthModule,
+    SongsModule,
+    PlaylistModule,
+    ArtistModule,
+  ],
 })
 export class AppModule {}

@@ -11,7 +11,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { environmentVariables } from 'src/env/envoriment';
+import { environmentVariables } from '../env/envoriment';
 
 @Injectable()
 export class AuthService {
