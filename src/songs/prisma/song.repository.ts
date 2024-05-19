@@ -8,19 +8,41 @@ export class SongRepository implements SongRepositoryInterface {
 
   private readonly songRepository = this.dbClient.song;
 
-  create(dto: any): Promise<any> {
-    throw new Error('Method not implemented.');
+  async create(dto: any): Promise<any> {
+    return await this.songRepository.create({
+      data: dto,
+    });
   }
-  findAll(): Promise<any> {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<any> {
+    return await this.songRepository.findMany();
   }
-  findSongById(id: number): Promise<any> {
-    throw new Error('Method not implemented.');
+  async findSongById(id: string): Promise<any> {
+    return await this.songRepository.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
-  update(id: number, dto: any): Promise<any> {
-    throw new Error('Method not implemented.');
+  async findArtistById(artistId: string): Promise<any> {
+    return await this.songRepository.findMany({
+      where: {
+        artistId: artistId,
+      },
+    });
   }
-  delete(id: number): Promise<any> {
-    throw new Error('Method not implemented.');
+  async update(id: string, dto: any): Promise<any> {
+    return await this.songRepository.update({
+      where: {
+        id: id,
+      },
+      data: dto,
+    });
+  }
+  async delete(id: string): Promise<any> {
+    return await this.songRepository.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
