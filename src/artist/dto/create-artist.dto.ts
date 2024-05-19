@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateSongDto {
+export class CreateArtistDto {
   @ApiProperty()
   name: string;
 
   @ApiProperty()
-  duration: string;
+  email: string;
 
   @ApiProperty()
-  videoUrl: string;
+  password: string;
 }
