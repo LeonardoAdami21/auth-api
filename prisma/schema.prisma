@@ -38,9 +38,8 @@ model Song {
   name      String   
   duration  String
   videoUrl  String
-  imageUrl  String
-  playlistId String
-  playlist  Playlist @relation(fields: [playlistId], references: [id])
+  playlistId String?
+  playlist  Playlist? @relation(fields: [playlistId], references: [id])
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
   artist    Artist  @relation(fields: [artistId], references: [id])
@@ -59,6 +58,8 @@ model Albuns{
 model Artist {
   id        String   @id @default(uuid())
   name      String
+  email     String   @unique
+  password  String
   songs     Song[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
