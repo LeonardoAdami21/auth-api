@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/LeonardoAdami21/auth-api/compare/v0.0.2...v0.0.3) (2024-05-19)
+
+
+### Bug Fixes
+
+* **fix/fixed-prisma:** fixed prisma schema ([ec85b47](https://github.com/LeonardoAdami21/auth-api/commit/ec85b4707f1168e98bb8333e48494971112ff52e))
+
 ### 0.0.2 (2024-05-19)
 
 
