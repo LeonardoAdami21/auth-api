@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateSongDto } from './dto/create-song.dto';
@@ -13,18 +14,16 @@ export class SongsService {
   constructor(
     @Inject('song__repository')
     private readonly songRepository: SongRepositoryInterface,
+    
   ) {}
 
-  async create(createSongDto: CreateSongDto, artistId: string) {
+  async create(dto: CreateSongDto, artistId: string) {
     try {
       const artist = await this.songRepository.findArtistById(artistId);
       if (!artist) {
         throw new NotFoundException('Artist not found');
       }
-      const song = await this.songRepository.create({
-        ...createSongDto,
-        artistId,
-      });
+      const song = await this.songRepository.create(dto, artistId);
       return song;
     } catch (error) {
       throw new BadRequestException('Error creating song');
@@ -32,7 +31,12 @@ export class SongsService {
   }
 
   async findAll() {
-    return `This action returns all songs`;
+    try {
+      const songs = await this.songRepository.findAll();
+      return songs;
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching songs');
+    }
   }
 
   async findOne(id: string) {

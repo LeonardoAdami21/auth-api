@@ -4,12 +4,14 @@ import { AuthController } from './auth.controller';
 import { PrismaClient } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from './prisma/auth.repository';
+import { JwtStrategy } from '../guards/jwt.strategy';
 
 @Module({
   controllers: [AuthController],
   providers: [
     AuthService,
     JwtService,
+    JwtStrategy,
     {
       provide: 'dbClient',
       useClass: PrismaClient,
