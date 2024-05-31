@@ -6,4 +6,5 @@ export class CreatePlaylistDto {
 
   @ApiProperty()
   description: string;
+
 }

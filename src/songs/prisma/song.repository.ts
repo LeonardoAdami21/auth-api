@@ -20,10 +20,10 @@ export class SongRepository implements SongRepositoryInterface {
   async findAll(): Promise<any> {
     return await this.songRepository.findMany();
   }
-  async findSongById(artistId: string) {
+  async findSongById(id: string) {
     return await this.songRepository.findUnique({
       where: {
-        id: artistId,
+        id: id,
       },
     });
   }
