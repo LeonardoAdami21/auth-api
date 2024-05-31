@@ -13,11 +13,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
+enum enumRole {
+  USER
+  ARTIST
+}
 model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String
+  role  enumRole     @default(USER)
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
   playlists Playlist[]
@@ -60,8 +67,9 @@ model Artist {
   name      String
   email     String   @unique
   password  String
-  songs     Song[]
+  role      enumRole     @default(ARTIST)
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+  songs     Song[]
   albuns    Albuns[]
 }

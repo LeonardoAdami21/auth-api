@@ -1,32 +1,41 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
-import { SongsService } from './songs.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { SongsService } from './songs.service';
+import { JwtAuthGuard } from '../guards/jwt.guard';
+import { RolesGuard } from '../guards/role.strategy';
+import { Role } from '../guards/role.guard';
+import { enumRole } from '@prisma/client';
 
 @Controller('songs')
 @ApiTags('Songs')
 export class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
-  @Post()
+  @Post('')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Role(enumRole.ARTIST)
   create(
     @Body() createSongDto: CreateSongDto,
-    @Request() req: { artist: { artistId: string } },
+    @Request() req: { user: { id: string } },
   ) {
-    return this.songsService.create(createSongDto, req.artist.artistId);
+    console.log(req.user.id);
+    return this.songsService.create(createSongDto, req.user.id);
   }
 
-  @Get()
+  @Get('')
   findAll() {
     return this.songsService.findAll();
   }

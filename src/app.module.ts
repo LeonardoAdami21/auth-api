@@ -6,19 +6,20 @@ import { PlaylistModule } from './playlist/playlist.module';
 import { ArtistModule } from './artist/artist.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { environmentVariables } from './env/envoriment';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
     AuthModule,
+    ArtistModule,
     SongsModule,
     PlaylistModule,
-    ArtistModule,
   ],
 })
 export class AppModule {}

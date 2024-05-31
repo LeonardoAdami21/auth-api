@@ -17,9 +17,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document);
   const port = environmentVariables.appPort;
-  await app.listen(process.env.port || 3000, () =>
+  await app.listen(port || 3000, () =>
     console.log(
-      `App is Running\nDocumentation available on http://localhost:${process.env.port}/docs`,
+      `App is Running\nDocumentation available on http://localhost:${port}/docs`,
     ),
   );
 }

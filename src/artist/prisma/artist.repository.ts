@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ArtistRepositoryInterface } from './artist.repository.inerface';
-import { PrismaClient } from '@prisma/client';
+import { Artist, PrismaClient } from '@prisma/client';
 import { CreateArtistDto } from '../dto/create-artist.dto';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class ArtistRepository implements ArtistRepositoryInterface {
   constructor(@Inject('dbClient') private readonly dbClient: PrismaClient) {}
   private readonly artistRepository = this.dbClient.artist;
 
-  async create(dto: CreateArtistDto): Promise<any> {
+  async create(dto: CreateArtistDto): Promise<Artist> {
     return await this.artistRepository.create({
       data: dto,
     });
