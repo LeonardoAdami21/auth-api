@@ -4,13 +4,17 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { JwtStrategy } from '../guards/jwt.strategy';
 import { CreateArtistDto } from './dto/create-artist.dto';
+import { LoginArtistDto } from './dto/login-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistRepositoryInterface } from './prisma/artist.repository.inerface';
-import * as bcrypt from 'bcrypt';
-import { LoginArtistDto } from './dto/login-artist.dto';
-import { JwtService } from '@nestjs/jwt';
+import { environmentVariables } from '../env/envoriment';
+import { enumRole } from '@prisma/client';
 
 @Injectable()
 export class ArtistService {
@@ -18,22 +22,22 @@ export class ArtistService {
     @Inject('artist__repository')
     private readonly artistRepository: ArtistRepositoryInterface,
     private readonly jwtService: JwtService,
+    private readonly jwtStrategy: JwtStrategy,
   ) {}
 
-  async register(createArtistDto: CreateArtistDto) {
+  async register(dto: CreateArtistDto) {
     try {
-      const { email, name, password } = createArtistDto;
-      const artist = await this.artistRepository.findArtistByEmail(email);
-      if (artist) {
-        throw new BadRequestException('Artist already exists');
-      }
+      const { email, name, password, role } = dto;
       const hashedPassword = await bcrypt.hash(password, 10);
-      if (password !== hashedPassword)
-        throw new ConflictException('Password does not match');
+      const passwordConfirmation = await bcrypt.hash(password, hashedPassword);
+      if (passwordConfirmation !== hashedPassword) {
+        throw new UnprocessableEntityException('Error hashing password');
+      }
       const newArtist = await this.artistRepository.create({
         email,
         name,
         password: hashedPassword,
+        role: role || enumRole.ARTIST,
       });
 
       return newArtist;
@@ -51,10 +55,16 @@ export class ArtistService {
       }
       const isPasswordMatch = await bcrypt.compare(password, artist.password);
       if (!isPasswordMatch) {
-        throw new BadRequestException('Invalid password');
+        throw new ConflictException('Invalid password');
       }
-      const payload = { sub: artist.id };
-      const token = this.jwtService.sign(payload);
+      const payload = await this.jwtStrategy.validateArtist({
+        id: artist.id,
+        role: artist.role,
+      });
+      const token = this.jwtService.sign(payload, {
+        secret: environmentVariables.jwtSecret,
+        expiresIn: '1d',
+      });
       return { access_token: token };
     } catch (error) {
       throw new BadRequestException('Error logging in artist');

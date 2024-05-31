@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AuthRepositoryInterface } from './auth.repository.interface';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, enumRole } from '@prisma/client';
 import { RegisterUserDto } from '../dto/register-user.dto';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AuthRepository implements AuthRepositoryInterface {
       },
     });
   }
-  async create(dto: RegisterUserDto): Promise<any> {
+  async create(dto: RegisterUserDto) {
     return await this.authRepository.create({
       data: dto,
     });

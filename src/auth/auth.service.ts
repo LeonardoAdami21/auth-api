@@ -12,6 +12,8 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { environmentVariables } from '../env/envoriment';
+import { JwtStrategy } from '../guards/jwt.strategy';
+import { enumRole } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -19,23 +21,22 @@ export class AuthService {
     @Inject('auth__repository')
     private readonly authRepository: AuthRepositoryInterface,
     private readonly jwtService: JwtService,
+    private readonly jwtStrategy: JwtStrategy,
   ) {}
 
   async register(dto: RegisterUserDto) {
     try {
-      const { email, password } = dto;
-      const user = await this.authRepository.findUserByEmail(email);
-      if (user) {
-        throw new BadRequestException('User with this email already exists');
-      }
+      const {name, password, role } = dto;
       const hashedPassword = await bcrypt.hash(password, 10);
-      if (password !== hashedPassword) {
-        throw new UnprocessableEntityException('Error hashing password');
-      }
+      const passwordConfirmation = await bcrypt.hash(password, hashedPassword);
       const newUser = await this.authRepository.create({
         ...dto,
-        password: hashedPassword,
+        password: passwordConfirmation,
+        role: role || enumRole.USER,
       });
+      if (passwordConfirmation !== hashedPassword) {
+        throw new UnprocessableEntityException('Error hashing password');
+      }
       return newUser;
     } catch (error) {
       throw new Error(error.message);
@@ -53,7 +54,10 @@ export class AuthService {
       if (!isPasswordValid) {
         throw new ConflictException('Invalid password');
       }
-      const payload = { sub: user.id };
+      const payload = await this.jwtStrategy.validate({
+        id: user.id,
+        role: user.role,
+      });
       const token = this.jwtService.sign(payload, {
         secret: environmentVariables.jwtSecret,
         expiresIn: '1d',

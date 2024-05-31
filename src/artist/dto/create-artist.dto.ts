@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { enumRole } from '@prisma/client';
 
 export class CreateArtistDto {
   @ApiProperty()
@@ -9,4 +10,6 @@ export class CreateArtistDto {
 
   @ApiProperty()
   password: string;
+
+  role?: enumRole;
 }
