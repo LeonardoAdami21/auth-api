@@ -16,20 +16,20 @@ export class PlaylistService {
     private readonly playlistRepository: PlaylistRepositoryInterface,
   ) {}
 
-  async create(dto: CreatePlaylistDto, userId: string): Promise<any> {
+  async create(dto: CreatePlaylistDto, userId: string) {
     try {
       const user = await this.playlistRepository.findPlaylistByUserId(userId);
       if (!user) {
         throw new NotFoundException('User not found');
       }
-      const playlists = await this.playlistRepository.create(dto);
+      const playlists = await this.playlistRepository.create(dto, user.id);
       return playlists;
     } catch (error) {
-      throw new BadRequestException('Error to creating playlist');
+      throw new Error(error.message);
     }
   }
 
-  async findAll(): Promise<any> {
+  async findAll() {
     try {
       const playlists = await this.playlistRepository.findAll();
       return playlists;
@@ -38,7 +38,7 @@ export class PlaylistService {
     }
   }
 
-  async findPlaylistById(id: string): Promise<any> {
+  async findPlaylistById(id: string) {
     try {
       const playlist = await this.playlistRepository.findPlaylistById(id);
       if (!playlist) {
@@ -85,6 +85,19 @@ export class PlaylistService {
       return { message: 'Playlist deleted successfully.' };
     } catch (error) {
       throw new BadRequestException('Error to delete playlist');
+    }
+  }
+
+  async findPlaylistByUserId(userId: string) {
+    try {
+      const playlist =
+        await this.playlistRepository.findPlaylistByUserId(userId);
+      if (!playlist) {
+        throw new NotFoundException('Playlist not found');
+      }
+      return playlist;
+    } catch (error) {
+      throw new InternalServerErrorException('Error to find playlist');
     }
   }
 }

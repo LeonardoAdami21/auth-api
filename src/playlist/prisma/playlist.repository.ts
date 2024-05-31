@@ -1,7 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PlaylistRepositoryInterface } from './playlist.repository.interface';
-import { PrismaClient } from '@prisma/client';
+import { Playlist, PrismaClient } from '@prisma/client';
 import { UpdatePlaylistDto } from '../dto/update-playlist.dto';
+import { CreatePlaylistDto } from '../dto/create-playlist.dto';
 
 @Injectable()
 export class PlaylistRepository implements PlaylistRepositoryInterface {
@@ -9,9 +10,12 @@ export class PlaylistRepository implements PlaylistRepositoryInterface {
 
   private readonly playlistRepository = this.dbClient.playlist;
 
-  async create(dto: any): Promise<any> {
+  async create(dto: CreatePlaylistDto, userId: string): Promise<any> {
     return await this.playlistRepository.create({
-      data: dto,
+      data: {
+        ...dto,
+        userId: userId,
+      },
     });
   }
 
@@ -27,6 +31,15 @@ export class PlaylistRepository implements PlaylistRepositoryInterface {
     });
   }
 
+  async findPlaylistByUserId(userId: string): Promise<any> {
+    const user = await this.dbClient.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    return user;
+  }
+
   async update(id: string, dto: UpdatePlaylistDto): Promise<any> {
     return this.playlistRepository.update({
       where: {
@@ -40,17 +53,6 @@ export class PlaylistRepository implements PlaylistRepositoryInterface {
     return this.playlistRepository.delete({
       where: {
         id: id,
-      },
-    });
-  }
-
-  async findPlaylistByUserId(userId: string): Promise<any> {
-    return this.playlistRepository.findFirst({
-      where: {
-        userId: userId,
-      },
-      include: {
-        user: true,
       },
     });
   }
