@@ -6,10 +6,15 @@ import {
   Patch,
   Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { PlaylistService } from './playlist.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../guards/jwt.guard';
+import { RolesGuard } from '../guards/role.strategy';
+import { Role } from '../guards/role.guard';
+import { enumRole } from '@prisma/client';
 
 @Controller('playlist')
 @ApiTags('Playlist')
@@ -17,11 +22,14 @@ export class PlaylistController {
   constructor(private readonly playlistService: PlaylistService) {}
 
   @Post('')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Role(enumRole.USER)
   async createPlaylist(
     @Body() dto: CreatePlaylistDto,
-    @Request() req: { user: { userId: string } },
+    @Request() req: { user: { id: string } },
   ) {
-    return this.playlistService.create(dto, req.user.userId);
+    return this.playlistService.create(dto, req.user.id);
   }
 
   @Get('')
