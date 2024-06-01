@@ -48,10 +48,12 @@ model Song {
   videoUrl  String
   playlistId String?
   playlist  Playlist? @relation(fields: [playlistId], references: [id])
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
   artist    Artist  @relation(fields: [artistId], references: [id])
   artistId  String
+  albuns    Albuns? @relation(fields: [albumId], references: [id])
+  albumId   String?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Albuns{
@@ -59,6 +61,7 @@ model Albuns{
   name      String
   artistId  String
   artist    Artist  @relation(fields: [artistId], references: [id])
+  songs     Song[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }

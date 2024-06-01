@@ -1,36 +1,43 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ArtistRepositoryInterface } from './artist.repository.inerface';
-import { Artist, PrismaClient } from '@prisma/client';
-import { CreateArtistDto } from '../dto/create-artist.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { CreateAlbunDto } from '../dto/create-albun.dto';
+import { AlbunsRepositoryInterface } from './albuns.repository.inerface';
 
 @Injectable()
-export class ArtistRepository implements ArtistRepositoryInterface {
+export class AlbunsRepository implements AlbunsRepositoryInterface {
   constructor(@Inject('dbClient') private readonly dbClient: PrismaClient) {}
-  private readonly artistRepository = this.dbClient.artist;
+  private readonly artistRepository = this.dbClient.albuns;
 
-  async create(dto: CreateArtistDto): Promise<Artist> {
+  async create(dto: CreateAlbunDto, artistId: string) {
     return await this.artistRepository.create({
-      data: dto,
+      data: {
+        ...dto,
+        artistId: artistId,
+      },
     });
   }
 
   async findAll(): Promise<any> {
     return await this.artistRepository.findMany();
   }
-  async findArtistById(id: string): Promise<any> {
+
+  async findById(id: string): Promise<any> {
     return await this.artistRepository.findUnique({
       where: {
         id: id,
       },
     });
   }
-  async findArtistByEmail(email: string): Promise<any> {
-    return await this.artistRepository.findFirst({
+
+  async findByArtistId(artistId: string): Promise<any> {
+    return await this.dbClient.artist.findUnique({
       where: {
-        email: email,
+        id: artistId,
       },
-    });
+    })
+
   }
+
   async update(id: string, dto: any): Promise<any> {
     return await this.artistRepository.update({
       where: {
@@ -39,6 +46,7 @@ export class ArtistRepository implements ArtistRepositoryInterface {
       data: dto,
     });
   }
+
   async delete(id: string): Promise<any> {
     return await this.artistRepository.delete({
       where: {

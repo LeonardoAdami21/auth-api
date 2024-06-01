@@ -5,6 +5,8 @@ import { ArtistRepository } from './prisma/artist.repository';
 import { PrismaClient } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from '../guards/jwt.strategy';
+import { AlbunsModule } from '../albuns/albuns.module';
+
 
 
 @Module({
@@ -26,5 +28,6 @@ import { JwtStrategy } from '../guards/jwt.strategy';
       useFactory: () => new JwtService(),
     },
   ],
+  imports: [AlbunsModule],
 })
 export class ArtistModule {}

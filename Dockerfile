@@ -2,10 +2,10 @@
 FROM node:14-alpine
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+COPY package*.json or yarn*.lock ./ 
 
 # Install dependencies
 RUN npm install or yarn install
@@ -24,4 +24,4 @@ ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 ENV POSTGRES_DB=${POSTGRES_DB}
 
 # Start the Nest.js application
-CMD ["yarn", "start", "start:dev"]
+CMD ["yarn", "start:dev"]

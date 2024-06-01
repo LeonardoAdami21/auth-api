@@ -5,6 +5,7 @@ export interface SongRepositoryInterface {
   findAll(): Promise<any>;
   findSongById(id: string): Promise<any>;
   findArtistById(id: string)
+  findSongByAlbumById(id: string, albumId: string)
   update(id: string, dto: any): Promise<any>;
   delete(id: string): Promise<any>;
 }

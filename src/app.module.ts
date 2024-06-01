@@ -7,6 +7,7 @@ import { ArtistModule } from './artist/artist.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { environmentVariables } from './env/envoriment';
+import { AlbunsModule } from './albuns/albuns.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { environmentVariables } from './env/envoriment';
     ArtistModule,
     SongsModule,
     PlaylistModule,
+    AlbunsModule,
   ],
 })
 export class AppModule {}
