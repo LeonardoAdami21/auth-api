@@ -20,6 +20,7 @@ export class SongRepository implements SongRepositoryInterface {
   async findAll(): Promise<any> {
     return await this.songRepository.findMany();
   }
+
   async findSongById(id: string) {
     return await this.songRepository.findUnique({
       where: {
@@ -27,6 +28,17 @@ export class SongRepository implements SongRepositoryInterface {
       },
     });
   }
+
+  async findSongByAlbumById(id: string, albumId: string) {
+    return await this.songRepository.findUnique({
+      where: {
+        id: id,
+        albumId: albumId,
+      },
+    });
+  }
+
+
   async findArtistById(artistId: string): Promise<any> {
     return await this.songRepository.findMany({
       where: {

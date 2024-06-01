@@ -80,6 +80,7 @@ export class ArtistService {
     }
   }
 
+
   async findOne(id: string) {
     return `This action returns a #${id} artist`;
   }
