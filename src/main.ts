@@ -15,11 +15,11 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('api', app, document);
   const port = environmentVariables.appPort;
   await app.listen(port || 3000, () =>
     console.log(
-      `App is Running\nDocumentation available on http://localhost:${port}/docs`,
+      `App is Running\nDocumentation available on http://localhost:${port}/api`,
     ),
   );
 }
