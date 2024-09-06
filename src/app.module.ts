@@ -1,13 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { SongsModule } from './songs/songs.module';
-import { PlaylistModule } from './playlist/playlist.module';
-import { ArtistModule } from './artist/artist.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { environmentVariables } from './env/envoriment';
-import { AlbunsModule } from './albuns/albuns.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -17,11 +12,7 @@ import { AlbunsModule } from './albuns/albuns.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
-    AuthModule,
-    ArtistModule,
-    SongsModule,
-    PlaylistModule,
-    AlbunsModule,
+    AuthModule
   ],
 })
 export class AppModule {}

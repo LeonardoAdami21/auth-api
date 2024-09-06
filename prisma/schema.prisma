@@ -27,53 +27,5 @@ model User {
   role  enumRole     @default(USER)
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-  playlists Playlist[]
 }
 
-model Playlist {
-  id        String   @id @default(uuid())
-  name      String
-  description String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  songs     Song[]
-}
-
-model Song {
-  id        String   @id @default(uuid())
-  name      String   
-  duration  String
-  videoUrl  String
-  playlistId String?
-  playlist  Playlist? @relation(fields: [playlistId], references: [id])
-  artist    Artist  @relation(fields: [artistId], references: [id])
-  artistId  String
-  albuns    Albuns? @relation(fields: [albumId], references: [id])
-  albumId   String?
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-}
-
-model Albuns{
-  id        String   @id @default(uuid())
-  name      String
-  artistId  String
-  artist    Artist  @relation(fields: [artistId], references: [id])
-  songs     Song[]
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-}
-
-model Artist {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      enumRole     @default(ARTIST)
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  songs     Song[]
-  albuns    Albuns[]
-}
