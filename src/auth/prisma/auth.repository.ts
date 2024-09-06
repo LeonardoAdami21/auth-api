@@ -7,7 +7,7 @@ import { RegisterUserDto } from '../dto/register-user.dto';
 export class AuthRepository implements AuthRepositoryInterface {
   constructor(@Inject('dbClient') private readonly dbClient: PrismaClient) {}
 
-  private readonly authRepository = this.dbClient.user;
+  private readonly authRepository = this.dbClient.users;
 
   async findUserByEmail(email: string): Promise<any> {
     return await this.authRepository.findUnique({
@@ -19,6 +19,7 @@ export class AuthRepository implements AuthRepositoryInterface {
   async create(dto: RegisterUserDto) {
     return await this.authRepository.create({
       data: dto,
+      
     });
   }
   async findAll() {

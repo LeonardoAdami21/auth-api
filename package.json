@@ -14,28 +14,10 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
-    "release": "standard-version",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -45,15 +27,12 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.3.1",
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.19.1",
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
-    "commitizen": "^4.3.0",
-    "cz-conventional-changelog": "^3.3.0",
-    "lint-staged": "^15.2.5",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "prisma": "^5.14.0",
+    "prisma": "^5.19.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },
