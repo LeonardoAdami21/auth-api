@@ -3,6 +3,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -31,6 +32,7 @@ export class AuthService {
       const passwordConfirmation = await bcrypt.hash(password, hashedPassword);
       const newUser = await this.authRepository.create({
         ...dto,
+        name,
         password: passwordConfirmation,
         role: role || enumRole.USER,
       });
@@ -39,7 +41,7 @@ export class AuthService {
       }
       return newUser;
     } catch (error) {
-      throw new Error(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 

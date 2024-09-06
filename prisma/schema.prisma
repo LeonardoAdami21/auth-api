@@ -14,18 +14,66 @@ datasource db {
 }
 
 
-
 enum enumRole {
   USER
   ARTIST
 }
-model User {
+
+
+model Users {
   id        String   @id @default(uuid())
   name      String
+  document  String  @unique
   email     String   @unique
   password  String
+  inscriptionDate DateTime @default(now())
+  address   String[]
+  tickets   Tickets[]
+  winner Winner[]
   role  enumRole     @default(USER)
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 }
 
+model Draws{
+  id String @id @default(uuid())
+  name String
+  initialDate DateTime
+  finalDate DateTime
+  description String?
+  status String  @default("ativo")
+  tickets Tickets[]
+  prize Prize[]
+  winner Winner[]
+}
+
+model Tickets{
+  id String @id @default(uuid())
+  name String
+  ticketNumber Int
+  userId String
+  user Users  @relation(fields: [userId], references: [id])
+  drawsId String
+  draws Draws @relation(fields: [drawsId], references: [id])
+  emissionDate DateTime @default(now())
+}
+
+model Prize{
+  id String @id @default(uuid())
+  name String
+  quantity Int
+  drawsId String
+  draws Draws @relation(fields: [drawsId], references: [id])
+  winner Winner[]
+}
+
+model Winner{
+  id String @id @default(uuid())
+  drawsId String
+  draws Draws @relation(fields: [drawsId], references: [id])
+  usersId String
+  users Users  @relation(fields: [usersId], references: [id])
+  prizeId String
+  prize Prize @relation(fields: [prizeId], references: [id])
+  winningDate DateTime @default(now())
+}
